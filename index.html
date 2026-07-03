@@ -737,8 +737,10 @@
   let ready = false;
   let account = null;       // {farmName, ownerName, email, password, createdAt}
   let loggedIn = false;     // session flag (in-memory)
-  let authView = 'signup';  // 'signup' | 'login'
+  let authView = 'signup';  // 'signup' | 'login' | 'forgot' | 'forgot-sent' | 'reset'
   let authError = '';
+  let pendingResetEmail = '';
+  let resetLinkValid = false;
   let view = 'dashboard'; // dashboard | list | tasks | inventory | reports | settings
   let listFilter = 'all'; // all | livestock | bird
   let searchTerm = '';
@@ -922,6 +924,51 @@
         </div>
       `;
     }
+
+    if(authView === 'forgot'){
+      return `
+        <div class="fh-auth-card">
+          <div class="fh-auth-logo">${authLogoSvg()}</div>
+          <h2>Reset your password</h2>
+          <p class="fh-auth-sub">Enter the email on your farm account and we'll send a password reset link to it.</p>
+          ${authError ? `<div class="fh-auth-error">${esc(authError)}</div>` : ''}
+          <div class="fh-field"><label>Email</label><input id="au-forgot-email" type="email" placeholder="you@example.com"></div>
+          <button class="fh-btn fh-btn-primary" id="au-forgot-send" style="width:100%; padding:12px; margin-top:6px;">Send reset link</button>
+          <div class="fh-auth-switch"><button id="au-back-login">← Back to log in</button></div>
+        </div>
+      `;
+    }
+
+    if(authView === 'forgot-sent'){
+      return `
+        <div class="fh-auth-card">
+          <div class="fh-auth-logo">${authLogoSvg()}</div>
+          <h2>Check your email</h2>
+          <p class="fh-auth-sub">If <b>${esc(pendingResetEmail)}</b> matches a MkulimaKe account, a password reset link is on its way.</p>
+          <div class="fh-auth-note" style="background:var(--pine-tint); color:var(--pine); border-radius:8px; padding:10px 12px; text-align:left; margin-top:0; font-size:12px;">
+            MkulimaKe doesn't send real emails from this app yet, so here's your reset link right here instead of your inbox.
+          </div>
+          ${resetLinkValid ? `<button class="fh-btn fh-btn-primary" id="au-open-reset-link" style="width:100%; padding:12px; margin-top:14px;">Open reset link →</button>` : ''}
+          <div class="fh-auth-switch"><button id="au-back-login">← Back to log in</button></div>
+        </div>
+      `;
+    }
+
+    if(authView === 'reset'){
+      return `
+        <div class="fh-auth-card">
+          <div class="fh-auth-logo">${authLogoSvg()}</div>
+          <h2>Set a new password</h2>
+          <p class="fh-auth-sub">Choose a new password for <b>${esc(pendingResetEmail)}</b>.</p>
+          ${authError ? `<div class="fh-auth-error">${esc(authError)}</div>` : ''}
+          <div class="fh-field"><label>New password</label><input id="au-new-pass" type="password" placeholder="Choose a new password"></div>
+          <div class="fh-field"><label>Confirm new password</label><input id="au-new-pass2" type="password" placeholder="Type it again"></div>
+          <button class="fh-btn fh-btn-primary" id="au-reset-save" style="width:100%; padding:12px; margin-top:6px;">Reset password</button>
+          <div class="fh-auth-switch"><button id="au-back-login">← Back to log in</button></div>
+        </div>
+      `;
+    }
+
     return `
       <div class="fh-auth-card">
         <div class="fh-auth-logo">${authLogoSvg()}</div>
@@ -932,6 +979,9 @@
         <div class="fh-field"><label>Password</label><input id="au-login-pass" type="password" placeholder="Your password"></div>
         <button class="fh-btn fh-btn-primary" id="au-login-btn" style="width:100%; padding:12px; margin-top:6px;">Log in</button>
         <div class="fh-auth-switch">
+          <button id="au-goto-forgot">Forgot your password?</button>
+        </div>
+        <div class="fh-auth-switch" style="margin-top:6px;">
           New to this farm? <button id="au-goto-signup">Set up a different account</button>
         </div>
         <p class="fh-auth-note">Setting up a different account replaces this browser's saved farm — its animal records go with it.</p>
@@ -948,6 +998,12 @@
     };
     const goLogin = document.getElementById('au-goto-login');
     if(goLogin) goLogin.onclick = ()=>{ authView='login'; authError=''; render(); };
+
+    const goForgot = document.getElementById('au-goto-forgot');
+    if(goForgot) goForgot.onclick = ()=>{ authView='forgot'; authError=''; render(); };
+
+    const backLogin = document.getElementById('au-back-login');
+    if(backLogin) backLogin.onclick = ()=>{ authView='login'; authError=''; pendingResetEmail=''; resetLinkValid=false; render(); };
 
     const signupBtn = document.getElementById('au-signup-btn');
     if(signupBtn){
@@ -978,10 +1034,43 @@
         }
       };
     }
+
+    const forgotSend = document.getElementById('au-forgot-send');
+    if(forgotSend){
+      forgotSend.onclick = ()=>{
+        const email = document.getElementById('au-forgot-email').value.trim().toLowerCase();
+        if(!email){ authError='Enter the email on your farm account.'; render(); return; }
+        pendingResetEmail = email;
+        resetLinkValid = !!(account && account.email.toLowerCase() === email);
+        authError='';
+        authView = 'forgot-sent';
+        render();
+      };
+    }
+    const openResetLink = document.getElementById('au-open-reset-link');
+    if(openResetLink){
+      openResetLink.onclick = ()=>{ authError=''; authView='reset'; render(); };
+    }
+    const resetSave = document.getElementById('au-reset-save');
+    if(resetSave){
+      resetSave.onclick = async ()=>{
+        const p1 = document.getElementById('au-new-pass').value;
+        const p2 = document.getElementById('au-new-pass2').value;
+        if(!p1 || p1.length < 4){ authError='Password must be at least 4 characters.'; render(); return; }
+        if(p1 !== p2){ authError='Passwords do not match.'; render(); return; }
+        account = {...account, password: p1};
+        await saveAccount();
+        authView = 'login'; authError=''; pendingResetEmail=''; resetLinkValid=false;
+        toast('Password updated — you can now log in');
+        render();
+      };
+    }
+
     document.querySelectorAll('#fh-auth input').forEach(inp=>{
       inp.onkeydown = (e)=>{
         if(e.key === 'Enter'){
-          const btn = document.getElementById('au-signup-btn') || document.getElementById('au-login-btn');
+          const btn = document.getElementById('au-signup-btn') || document.getElementById('au-login-btn')
+            || document.getElementById('au-forgot-send') || document.getElementById('au-reset-save');
           if(btn) btn.click();
         }
       };
