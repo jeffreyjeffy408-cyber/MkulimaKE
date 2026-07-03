@@ -63,11 +63,11 @@
     margin:0; font-size:11px; letter-spacing:1.6px; text-transform:uppercase;
     color:var(--ink-faint); font-weight:600;
   }
-  .fh-nav{display:flex; gap:4px; background:var(--paper-dark); padding:4px; border-radius:8px; border:1px solid var(--line);}
+  .fh-nav{display:flex; gap:4px; background:var(--paper-dark); padding:4px; border-radius:8px; border:1px solid var(--line); overflow-x:auto; max-width:100%;}
   .fh-nav-btn{
     border:none; background:transparent; padding:8px 14px; border-radius:6px;
     font-size:13px; font-weight:600; color:var(--ink-soft); letter-spacing:0.2px;
-    transition:background .15s, color .15s;
+    transition:background .15s, color .15s; white-space:nowrap; flex-shrink:0;
   }
   .fh-nav-btn.active{background:var(--ink); color:var(--paper);}
   .fh-nav-btn:not(.active):hover{background:var(--card);}
@@ -236,6 +236,7 @@
   .fh-timeline-dot.type-treatment{background:var(--danger-tint); color:var(--danger);}
   .fh-timeline-dot.type-checkup{background:rgba(122,168,214,0.18); color:#8FB6E0;}
   .fh-timeline-dot.type-weight{background:rgba(214,178,90,0.18); color:#DFBB6E;}
+  .fh-timeline-dot.type-breeding{background:rgba(178,142,214,0.18); color:#C7A6EE;}
   .fh-timeline-content{background:var(--card); border:1px solid var(--line-soft); border-radius:8px; padding:9px 12px; flex:1;}
   .fh-timeline-top{display:flex; justify-content:space-between; gap:8px; align-items:baseline;}
   .fh-timeline-type{font-size:12px; font-weight:700;}
@@ -258,6 +259,96 @@
     transition:opacity .2s, transform .2s;
   }
   .fh-toast.show{opacity:1; transform:translateX(-50%) translateY(-4px);}
+
+  /* ---------- Quick actions (dashboard) ---------- */
+  .fh-quick-row{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:28px;}
+  .fh-quick-btn{
+    display:flex; align-items:center; gap:8px; background:var(--card); border:1px solid var(--line);
+    border-radius:9px; padding:10px 16px; font-size:12.5px; font-weight:700; color:var(--ink);
+  }
+  .fh-quick-btn:hover{border-color:var(--pine); background:var(--pine-tint);}
+  .fh-quick-btn .qi{font-size:15px;}
+
+  /* ---------- Two-column dashboard layout ---------- */
+  .fh-dash-cols{display:grid; grid-template-columns:1.4fr 1fr; gap:20px; align-items:start;}
+  @media(max-width:900px){.fh-dash-cols{grid-template-columns:1fr;}}
+
+  /* ---------- Tasks ---------- */
+  .fh-task-list{display:flex; flex-direction:column; gap:8px;}
+  .fh-task-row{
+    display:flex; align-items:center; gap:12px; background:var(--card); border:1px solid var(--line-soft);
+    border-radius:9px; padding:12px 14px;
+  }
+  .fh-task-row.is-overdue{border-color:var(--danger);}
+  .fh-task-check{
+    width:22px; height:22px; border-radius:50%; border:2px solid var(--line); background:transparent; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center; font-size:12px; color:transparent;
+  }
+  .fh-task-check:hover{border-color:var(--pine);}
+  .fh-task-row.is-done .fh-task-check{background:var(--pine); border-color:var(--pine); color:#fff;}
+  .fh-task-body{flex:1; min-width:0;}
+  .fh-task-title{font-size:13.5px; font-weight:700; color:var(--ink);}
+  .fh-task-row.is-done .fh-task-title{text-decoration:line-through; color:var(--ink-faint);}
+  .fh-task-meta{font-size:11px; color:var(--ink-soft); margin-top:2px; display:flex; gap:8px; flex-wrap:wrap;}
+  .fh-task-due{font-family:var(--font-mono); font-weight:600;}
+  .fh-task-row.is-overdue .fh-task-due{color:var(--danger);}
+  .fh-task-type-badge{
+    font-size:9.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.4px; padding:2px 7px;
+    border-radius:20px; background:var(--rust-tint); color:var(--rust); white-space:nowrap;
+  }
+  .fh-task-del{background:none; border:none; color:var(--ink-faint); font-size:13px; padding:4px;}
+  .fh-task-del:hover{color:var(--danger);}
+  .fh-task-preview-row{display:flex; align-items:center; gap:10px; font-size:12.5px; padding:8px 0; border-bottom:1px solid var(--line-soft);}
+  .fh-task-preview-row:last-child{border-bottom:none;}
+
+  /* ---------- Inventory ---------- */
+  .fh-inv-card{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 18px;}
+  .fh-inv-top{display:flex; justify-content:space-between; align-items:flex-start; gap:8px; margin-bottom:10px;}
+  .fh-inv-name{font-family:var(--font-display); font-weight:700; font-size:16px;}
+  .fh-inv-cat{font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.4px; color:var(--ink-faint); margin-top:2px;}
+  .fh-inv-qty-row{display:flex; align-items:center; justify-content:space-between; margin-top:10px;}
+  .fh-inv-qty{font-family:var(--font-display); font-size:24px; font-weight:700;}
+  .fh-inv-unit{font-size:11px; color:var(--ink-soft); font-weight:600;}
+  .fh-inv-stepper{display:flex; gap:6px;}
+  .fh-inv-stepper button{
+    width:28px; height:28px; border-radius:7px; border:1px solid var(--line); background:var(--paper-dark);
+    color:var(--ink); font-size:15px; font-weight:700; line-height:1;
+  }
+  .fh-inv-stepper button:hover{border-color:var(--pine);}
+  .fh-inv-low{margin-top:10px; font-size:11px; color:var(--danger); font-weight:700; display:flex; align-items:center; gap:5px;}
+  .fh-inv-actions{display:flex; gap:8px; margin-top:12px; padding-top:10px; border-top:1px solid var(--line-soft);}
+  .fh-inv-actions button{background:none; border:none; font-size:11.5px; font-weight:700; color:var(--ink-soft); padding:2px 0;}
+  .fh-inv-actions button:hover{color:var(--ink);}
+
+  /* ---------- Reports ---------- */
+  .fh-report-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+  @media(max-width:800px){.fh-report-grid{grid-template-columns:1fr;}}
+  .fh-report-card{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:20px;}
+  .fh-report-card h4{font-family:var(--font-display); font-size:14px; margin:0 0 16px; font-weight:700;}
+  .fh-donut-wrap{display:flex; align-items:center; gap:22px; flex-wrap:wrap;}
+  .fh-donut{width:130px; height:130px; border-radius:50%; flex-shrink:0;}
+  .fh-donut-legend{display:flex; flex-direction:column; gap:8px; flex:1; min-width:140px;}
+  .fh-donut-legend-row{display:flex; align-items:center; gap:8px; font-size:12.5px;}
+  .fh-donut-dot{width:9px; height:9px; border-radius:50%; flex-shrink:0;}
+  .fh-donut-legend-row b{margin-left:auto; font-family:var(--font-mono);}
+  .fh-barlist{display:flex; flex-direction:column; gap:12px;}
+  .fh-barlist-row div.fh-barlist-label{display:flex; justify-content:space-between; font-size:12px; color:var(--ink-soft); margin-bottom:4px;}
+  .fh-barlist-track{height:8px; border-radius:5px; background:var(--paper-dark); overflow:hidden;}
+  .fh-barlist-fill{height:100%; border-radius:5px;}
+
+  /* ---------- Settings ---------- */
+  .fh-settings-grid{display:grid; grid-template-columns:1fr 1fr; gap:20px; align-items:start;}
+  @media(max-width:800px){.fh-settings-grid{grid-template-columns:1fr;}}
+  .fh-settings-card{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:22px;}
+  .fh-settings-card h4{font-family:var(--font-display); font-size:15px; margin:0 0 4px; font-weight:700;}
+  .fh-settings-card p.fh-settings-sub{font-size:12px; color:var(--ink-soft); margin:0 0 18px;}
+  .fh-settings-card.danger{border-color:var(--danger);}
+  .fh-settings-card.danger h4{color:var(--danger);}
+  .fh-danger-row{display:flex; justify-content:space-between; align-items:center; gap:12px; padding:12px 0; border-top:1px solid var(--line-soft);}
+  .fh-danger-row:first-of-type{border-top:none;}
+  .fh-danger-row div b{display:block; font-size:13px;}
+  .fh-danger-row div span{font-size:11.5px; color:var(--ink-soft);}
+
 
   /* =====================================================
      MARKETING SITE (mk- prefix, sits above the app)
@@ -524,10 +615,13 @@
       </div>
       <div class="mk-feat-grid">
         <div class="mk-feat-card"><div class="mk-feat-icon">🏷️</div><h3>Animal profiles</h3><p>Tag ID, name, breed, sex, date of birth, and status for every head of livestock or poultry you keep.</p></div>
-        <div class="mk-feat-card"><div class="mk-feat-icon">✚</div><h3>Health &amp; vaccination log</h3><p>Timestamp checkups, vaccinations, and treatments against each animal, in a running timeline.</p></div>
+        <div class="mk-feat-card"><div class="mk-feat-icon">✚</div><h3>Health &amp; vaccination log</h3><p>Timestamp checkups, vaccinations, deworming, treatments, and breeding events in a running timeline.</p></div>
         <div class="mk-feat-card"><div class="mk-feat-icon">⚖️</div><h3>Weight tracking</h3><p>Log weight checks over time to keep an eye on growth and condition.</p></div>
+        <div class="mk-feat-card"><div class="mk-feat-icon">🗓️</div><h3>Tasks &amp; reminders</h3><p>Schedule vaccinations and deworming rounds ahead of time, and see what's overdue at a glance.</p></div>
+        <div class="mk-feat-card"><div class="mk-feat-icon">📦</div><h3>Feed &amp; inventory</h3><p>Track feed, medicine, and supplies with quick stock adjustments and low-stock alerts.</p></div>
+        <div class="mk-feat-card"><div class="mk-feat-icon">📊</div><h3>Reports</h3><p>See herd composition, status breakdowns, and health activity at a glance — no spreadsheets needed.</p></div>
         <div class="mk-feat-card"><div class="mk-feat-icon">🔍</div><h3>Search &amp; filter</h3><p>Find any animal instantly by tag number, name, breed, species, or status.</p></div>
-        <div class="mk-feat-card"><div class="mk-feat-icon">📋</div><h3>Farm dashboard</h3><p>See your totals, recent activity, and newest additions at a glance the moment you open the app.</p></div>
+        <div class="mk-feat-card"><div class="mk-feat-icon">📋</div><h3>Farm dashboard</h3><p>Quick actions, upcoming tasks, herd mix, and recent activity — all on one screen.</p></div>
         <div class="mk-feat-card"><div class="mk-feat-icon">🔒</div><h3>Private by default</h3><p>Your records are tied to your account only — nobody else sees your farm's data.</p></div>
       </div>
     </div>
@@ -635,19 +729,29 @@
 (function(){
   const STORE_KEY = 'animals';
   const ACCOUNT_KEY = 'account';
+  const TASKS_KEY = 'tasks';
+  const INVENTORY_KEY = 'inventory';
   let animals = [];
+  let tasks = [];
+  let inventory = [];
   let ready = false;
   let account = null;       // {farmName, ownerName, email, password, createdAt}
   let loggedIn = false;     // session flag (in-memory)
   let authView = 'signup';  // 'signup' | 'login'
   let authError = '';
-  let view = 'dashboard'; // dashboard | list
+  let view = 'dashboard'; // dashboard | list | tasks | inventory | reports | settings
   let listFilter = 'all'; // all | livestock | bird
   let searchTerm = '';
   let speciesFilter = 'all';
+  let taskFilter = 'pending'; // pending | overdue | done | all
   let openDetailId = null;
   let modalMode = null; // 'add' | 'edit' | null
   let editingId = null;
+  let taskModalOpen = false;
+  let editingTaskId = null;
+  let invModalOpen = false;
+  let editingInvId = null;
+  let settingsMsg = '';
 
   const SPECIES_LIVESTOCK = ['Cattle','Goat','Sheep','Pig','Rabbit','Donkey','Horse','Other'];
   const SPECIES_BIRD = ['Chicken','Duck','Turkey','Quail','Goose','Guinea Fowl','Other'];
@@ -660,6 +764,18 @@
       animals = res && res.value ? JSON.parse(res.value) : [];
     }catch(e){
       animals = [];
+    }
+    try{
+      const res = await window.storage.get(TASKS_KEY, false);
+      tasks = res && res.value ? JSON.parse(res.value) : [];
+    }catch(e){
+      tasks = [];
+    }
+    try{
+      const res = await window.storage.get(INVENTORY_KEY, false);
+      inventory = res && res.value ? JSON.parse(res.value) : [];
+    }catch(e){
+      inventory = [];
     }
     try{
       const acc = await window.storage.get(ACCOUNT_KEY, false);
@@ -685,6 +801,22 @@
       await window.storage.set(STORE_KEY, JSON.stringify(animals), false);
     }catch(e){
       toast('Could not save — try again');
+    }
+  }
+
+  async function saveTasks(){
+    try{
+      await window.storage.set(TASKS_KEY, JSON.stringify(tasks), false);
+    }catch(e){
+      toast('Could not save tasks — try again');
+    }
+  }
+
+  async function saveInventory(){
+    try{
+      await window.storage.set(INVENTORY_KEY, JSON.stringify(inventory), false);
+    }catch(e){
+      toast('Could not save inventory — try again');
     }
   }
 
@@ -742,11 +874,27 @@
     const main = document.getElementById('fh-main');
     document.getElementById('fh-nav').innerHTML = navHtml();
     if(view === 'dashboard') main.innerHTML = dashboardHtml();
-    else main.innerHTML = listHtml();
+    else if(view === 'list') main.innerHTML = listHtml();
+    else if(view === 'tasks') main.innerHTML = tasksHtml();
+    else if(view === 'inventory') main.innerHTML = inventoryHtml();
+    else if(view === 'reports') main.innerHTML = reportsHtml();
+    else if(view === 'settings') main.innerHTML = settingsHtml();
+
+    const addBtn = document.getElementById('fh-add-open');
+    if(addBtn){
+      const labels = {dashboard:'+ Add animal', list:'+ Add animal', tasks:'+ Add task', inventory:'+ Add item', reports:'+ Add animal', settings:null};
+      if(view === 'settings'){ addBtn.style.display = 'none'; }
+      else{ addBtn.style.display = ''; addBtn.textContent = labels[view] || '+ Add animal'; }
+    }
 
     bindNav();
     bindDashboardOrList();
+    bindTasksView();
+    bindInventoryView();
+    bindSettingsView();
     renderModals();
+    renderTaskModal();
+    renderInvModal();
 
     const logoutBtn = document.getElementById('fh-logout-btn');
     if(logoutBtn) logoutBtn.onclick = ()=>{ loggedIn = false; authView='login'; authError=''; render(); };
@@ -841,7 +989,7 @@
   }
 
   function navHtml(){
-    const tabs = [['dashboard','Dashboard'],['list','All Animals']];
+    const tabs = [['dashboard','Dashboard'],['list','Animals'],['tasks','Tasks'],['inventory','Inventory'],['reports','Reports'],['settings','Settings']];
     return tabs.map(([id,label])=>
       `<button class="fh-nav-btn ${view===id?'active':''}" data-nav="${id}">${label}</button>`
     ).join('');
@@ -851,7 +999,14 @@
     document.querySelectorAll('[data-nav]').forEach(btn=>{
       btn.onclick = ()=>{ view = btn.dataset.nav; render(); };
     });
-    document.getElementById('fh-add-open').onclick = ()=>{ modalMode='add'; editingId=null; render(); };
+    const addBtn = document.getElementById('fh-add-open');
+    if(addBtn){
+      addBtn.onclick = ()=>{
+        if(view === 'tasks'){ taskModalOpen = true; editingTaskId = null; render(); }
+        else if(view === 'inventory'){ invModalOpen = true; editingInvId = null; render(); }
+        else{ modalMode = 'add'; editingId = null; render(); }
+      };
+    }
   }
 
   // -------- Dashboard --------
@@ -863,13 +1018,27 @@
     let logCount = 0;
     animals.forEach(a=> (a.healthLog||[]).forEach(l=>{ if(new Date(l.date).getTime() >= monthAgo) logCount++; }));
 
+    const todayStr = new Date().toISOString().slice(0,10);
+    const pendingTasks = tasks.filter(t=>t.status!=='done').sort((a,b)=> new Date(a.dueDate)-new Date(b.dueDate));
+    const overdueCount = pendingTasks.filter(t=>t.dueDate < todayStr).length;
+    const lowStockItems = inventory.filter(i=> Number(i.quantity) <= Number(i.lowStockThreshold||0));
+
+    const quickActions = `
+      <div class="fh-quick-row">
+        <button class="fh-quick-btn" data-quick="animal"><span class="qi">➕</span> Add animal</button>
+        <button class="fh-quick-btn" data-quick="task"><span class="qi">🗓️</span> Schedule task</button>
+        <button class="fh-quick-btn" data-quick="inventory"><span class="qi">📦</span> Add inventory item</button>
+      </div>
+    `;
+
     if(total === 0){
       return `
+        ${quickActions}
         <div class="fh-stats">
           ${statCard(0,'Total animals','var(--pine)')}
           ${statCard(0,'Livestock','var(--pine)')}
           ${statCard(0,'Poultry','var(--rust)')}
-          ${statCard(0,'Log entries (30d)','var(--ink)')}
+          ${statCard(tasks.filter(t=>t.status!=='done').length,'Open tasks','#8B6BC7')}
         </div>
         <div class="fh-empty">
           <h3>Your farm records are empty</h3>
@@ -879,7 +1048,7 @@
       `;
     }
 
-    // recent activity: last 6 log entries across all animals, plus recent additions
+    // recent activity: last 6 log entries across all animals
     let events = [];
     animals.forEach(a=>{
       (a.healthLog||[]).forEach(l=> events.push({date:l.date, text:`${l.type} — ${a.name || a.tagId}`, cat:a.category, kind:l.type}));
@@ -887,24 +1056,90 @@
     events.sort((a,b)=> new Date(b.date) - new Date(a.date));
     events = events.slice(0,6);
 
+    // species breakdown for the donut
+    const speciesCounts = {};
+    animals.forEach(a=>{ speciesCounts[a.species] = (speciesCounts[a.species]||0)+1; });
+    const donut = donutHtml(speciesCounts, total);
+
     return `
+      ${quickActions}
       <div class="fh-stats">
         ${statCard(total,'Total animals','var(--ink)')}
         ${statCard(livestock,'Livestock','var(--pine)')}
         ${statCard(birds,'Poultry','var(--rust)')}
-        ${statCard(logCount,'Log entries (30d)','#5A3A78')}
+        ${statCard(pendingTasks.length,'Open tasks'+(overdueCount?` (${overdueCount} overdue)`:''),overdueCount?'var(--danger)':'#8B6BC7')}
       </div>
-      <div class="fh-section-title">Recent activity</div>
-      ${events.length ? `<div class="fh-activity">${events.map(e=>`
-        <div class="fh-activity-row">
-          <span class="fh-activity-dot" style="background:${catColor(e.cat)}"></span>
-          <span>${esc(e.text)}</span>
-          <span class="fh-activity-meta">${esc(e.date)}</span>
+
+      <div class="fh-dash-cols">
+        <div>
+          <div class="fh-section-title">Recent activity</div>
+          ${events.length ? `<div class="fh-activity">${events.map(e=>`
+            <div class="fh-activity-row">
+              <span class="fh-activity-dot" style="background:${catColor(e.cat)}"></span>
+              <span>${esc(e.text)}</span>
+              <span class="fh-activity-meta">${esc(e.date)}</span>
+            </div>
+          `).join('')}</div>` : `<div class="fh-empty"><p style="margin:0">No log entries yet — open an animal's record to add a health note, treatment, or weight check.</p></div>`}
+
+          <div class="fh-section-title">Recently added</div>
+          <div class="fh-grid">
+            ${animals.slice().sort((a,b)=> (b.createdAt||0)-(a.createdAt||0)).slice(0,4).map(tagCardHtml).join('')}
+          </div>
         </div>
-      `).join('')}</div>` : `<div class="fh-empty"><p style="margin:0">No log entries yet — open an animal's record to add a health note, treatment, or weight check.</p></div>`}
-      <div class="fh-section-title">Recently added</div>
-      <div class="fh-grid">
-        ${animals.slice().sort((a,b)=> (b.createdAt||0)-(a.createdAt||0)).slice(0,3).map(tagCardHtml).join('')}
+
+        <div>
+          <div class="fh-section-title">Upcoming tasks</div>
+          ${pendingTasks.length ? `<div class="fh-report-card" style="padding:6px 16px;">
+            ${pendingTasks.slice(0,5).map(t=>{
+              const overdue = t.dueDate < todayStr;
+              const animal = t.animalId ? animals.find(a=>a.id===t.animalId) : null;
+              return `<div class="fh-task-preview-row">
+                <span style="width:7px;height:7px;border-radius:50%;flex-shrink:0;background:${overdue?'var(--danger)':'var(--pine)'}"></span>
+                <span style="flex:1">${esc(t.title)}${animal ? ' · '+esc(animal.name||animal.tagId) : ''}</span>
+                <span class="fh-task-due" style="color:${overdue?'var(--danger)':'var(--ink-faint)'}">${esc(t.dueDate)}</span>
+              </div>`;
+            }).join('')}
+          </div>` : `<div class="fh-empty" style="padding:24px 18px;"><p style="margin:0">No tasks scheduled. Add a reminder for the next vaccination or deworming round.</p></div>`}
+
+          <div class="fh-section-title">Herd &amp; flock mix</div>
+          ${total ? `<div class="fh-report-card">${donut}</div>` : ''}
+
+          ${lowStockItems.length ? `
+          <div class="fh-section-title">Low stock</div>
+          <div class="fh-report-card" style="padding:6px 16px;">
+            ${lowStockItems.slice(0,4).map(i=>`
+              <div class="fh-task-preview-row">
+                <span style="width:7px;height:7px;border-radius:50%;flex-shrink:0;background:var(--danger)"></span>
+                <span style="flex:1">${esc(i.name)}</span>
+                <span class="fh-task-due" style="color:var(--danger)">${esc(i.quantity)} ${esc(i.unit)} left</span>
+              </div>
+            `).join('')}
+          </div>` : ''}
+        </div>
+      </div>
+    `;
+  }
+
+  function donutHtml(counts, total){
+    const palette = ['#6FA24A','#C1592E','#8FB6E0','#DFBB6E','#C7A6EE','#71806A'];
+    const entries = Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+    let acc = 0;
+    const stops = entries.map(([sp,ct],i)=>{
+      const start = acc/total*360; acc += ct; const end = acc/total*360;
+      return `${palette[i%palette.length]} ${start}deg ${end}deg`;
+    }).join(', ');
+    return `
+      <div class="fh-donut-wrap">
+        <div class="fh-donut" style="background:conic-gradient(${stops});"></div>
+        <div class="fh-donut-legend">
+          ${entries.map(([sp,ct],i)=>`
+            <div class="fh-donut-legend-row">
+              <span class="fh-donut-dot" style="background:${palette[i%palette.length]}"></span>
+              <span>${esc(sp)}</span>
+              <b>${ct}</b>
+            </div>
+          `).join('')}
+        </div>
       </div>
     `;
   }
@@ -978,10 +1213,434 @@
     });
     const sf = document.getElementById('fh-species-filter');
     if(sf){ sf.onchange = ()=>{ speciesFilter = sf.value; render(); }; }
+    document.querySelectorAll('[data-quick]').forEach(btn=>{
+      btn.onclick = ()=>{
+        const k = btn.dataset.quick;
+        if(k==='animal'){ modalMode='add'; editingId=null; }
+        else if(k==='task'){ taskModalOpen=true; editingTaskId=null; }
+        else if(k==='inventory'){ invModalOpen=true; editingInvId=null; }
+        render();
+      };
+    });
   }
   function search2focus(){
     const s = document.getElementById('fh-search');
     if(s){ s.focus(); s.selectionStart = s.selectionEnd = s.value.length; }
+  }
+
+  // -------- Tasks --------
+  const TASK_TYPES = ['Vaccination','Deworming','Checkup','Breeding','Feeding','Other'];
+
+  function tasksHtml(){
+    const todayStr = new Date().toISOString().slice(0,10);
+    let filtered = tasks.filter(t=>{
+      if(taskFilter==='pending') return t.status!=='done';
+      if(taskFilter==='overdue') return t.status!=='done' && t.dueDate < todayStr;
+      if(taskFilter==='done') return t.status==='done';
+      return true;
+    });
+    filtered.sort((a,b)=> new Date(a.dueDate)-new Date(b.dueDate));
+    const counts = {
+      pending: tasks.filter(t=>t.status!=='done').length,
+      overdue: tasks.filter(t=>t.status!=='done' && t.dueDate<todayStr).length,
+      done: tasks.filter(t=>t.status==='done').length,
+      all: tasks.length
+    };
+    return `
+      <div class="fh-filterbar">
+        <button class="fh-chip ${taskFilter==='pending'?'active':''}" data-taskfilter="pending">Pending (${counts.pending})</button>
+        <button class="fh-chip ${taskFilter==='overdue'?'active':''}" data-taskfilter="overdue">Overdue (${counts.overdue})</button>
+        <button class="fh-chip ${taskFilter==='done'?'active':''}" data-taskfilter="done">Done (${counts.done})</button>
+        <button class="fh-chip ${taskFilter==='all'?'active':''}" data-taskfilter="all">All (${counts.all})</button>
+      </div>
+      ${filtered.length ? `<div class="fh-task-list">${filtered.map(t=>taskRowHtml(t, todayStr)).join('')}</div>` : `
+        <div class="fh-empty">
+          <h3>${tasks.length ? 'Nothing here' : 'No tasks yet'}</h3>
+          <p>${tasks.length ? 'Try a different filter.' : 'Schedule vaccinations, deworming rounds, or checkups so nothing gets missed.'}</p>
+          ${tasks.length ? '' : `<button class="fh-btn fh-btn-primary" onclick="document.getElementById('fh-add-open').click()">+ Schedule a task</button>`}
+        </div>
+      `}
+    `;
+  }
+
+  function taskRowHtml(t, todayStr){
+    const overdue = t.status!=='done' && t.dueDate < todayStr;
+    const animal = t.animalId ? animals.find(a=>a.id===t.animalId) : null;
+    return `
+      <div class="fh-task-row ${t.status==='done'?'is-done':''} ${overdue?'is-overdue':''}">
+        <button class="fh-task-check" data-donetask="${t.id}">✓</button>
+        <div class="fh-task-body">
+          <div class="fh-task-title">${esc(t.title)}</div>
+          <div class="fh-task-meta">
+            <span class="fh-task-type-badge">${esc(t.type)}</span>
+            <span class="fh-task-due">${overdue?'Overdue · ':''}${esc(t.dueDate)}</span>
+            ${animal ? `<span>${esc(animal.name||animal.tagId)}</span>` : ''}
+          </div>
+        </div>
+        <button class="fh-task-del" data-edittask="${t.id}" title="Edit">✎</button>
+        <button class="fh-task-del" data-deltask="${t.id}" title="Delete">🗑</button>
+      </div>
+    `;
+  }
+
+  function bindTasksView(){
+    document.querySelectorAll('[data-taskfilter]').forEach(btn=>{
+      btn.onclick = ()=>{ taskFilter = btn.dataset.taskfilter; render(); };
+    });
+    document.querySelectorAll('[data-donetask]').forEach(btn=>{
+      btn.onclick = ()=>{
+        const id = btn.dataset.donetask;
+        tasks = tasks.map(t=> t.id===id ? {...t, status: t.status==='done'?'pending':'done'} : t);
+        saveTasks(); render();
+      };
+    });
+    document.querySelectorAll('[data-edittask]').forEach(btn=>{
+      btn.onclick = ()=>{ editingTaskId = btn.dataset.edittask; taskModalOpen = true; render(); };
+    });
+    document.querySelectorAll('[data-deltask]').forEach(btn=>{
+      btn.onclick = ()=>{
+        tasks = tasks.filter(t=>t.id!==btn.dataset.deltask);
+        saveTasks(); toast('Task removed'); render();
+      };
+    });
+  }
+
+  function renderTaskModal(){
+    let host = document.getElementById('fh-task-modal-host');
+    if(host) host.remove();
+    if(!taskModalOpen) return;
+    host = document.createElement('div');
+    host.id = 'fh-task-modal-host';
+    document.getElementById('fh-root').appendChild(host);
+    const editing = !!editingTaskId;
+    const t = editing ? tasks.find(x=>x.id===editingTaskId) : {type:'Vaccination', dueDate:new Date().toISOString().slice(0,10)};
+    host.innerHTML = `
+      <div class="fh-overlay" id="fh-task-overlay">
+        <div class="fh-modal">
+          <div class="fh-modal-header">
+            <h2>${editing?'Edit task':'Schedule a task'}</h2>
+            <button class="fh-modal-close" id="fh-task-close">✕</button>
+          </div>
+          <div class="fh-modal-body">
+            <div class="fh-field"><label>Title</label><input id="t-title" type="text" placeholder="e.g. Deworm the goat flock" value="${esc(t.title||'')}"></div>
+            <div class="fh-row2">
+              <div class="fh-field"><label>Type</label>
+                <select id="t-type">${TASK_TYPES.map(ty=>`<option ${t.type===ty?'selected':''}>${ty}</option>`).join('')}</select>
+              </div>
+              <div class="fh-field"><label>Due date</label><input id="t-due" type="date" value="${esc(t.dueDate||'')}"></div>
+            </div>
+            <div class="fh-field"><label>Link to an animal (optional)</label>
+              <select id="t-animal">
+                <option value="">Whole farm / not specific</option>
+                ${animals.map(a=>`<option value="${a.id}" ${t.animalId===a.id?'selected':''}>${esc(a.name||a.tagId)} — ${esc(a.species)}</option>`).join('')}
+              </select>
+            </div>
+            <div class="fh-field"><label>Notes</label><textarea id="t-notes" rows="2" placeholder="Optional details">${esc(t.notes||'')}</textarea></div>
+          </div>
+          <div class="fh-modal-footer">
+            ${editing ? '<button class="fh-btn fh-btn-danger" id="fh-task-delete" style="margin-right:auto">Delete</button>' : ''}
+            <button class="fh-btn fh-btn-ghost" id="fh-task-cancel">Cancel</button>
+            <button class="fh-btn fh-btn-primary" id="fh-task-save">${editing?'Save changes':'Schedule task'}</button>
+          </div>
+        </div>
+      </div>
+    `;
+    const overlay = document.getElementById('fh-task-overlay');
+    overlay.onclick = (e)=>{ if(e.target===overlay) closeTaskModal(); };
+    document.getElementById('fh-task-close').onclick = closeTaskModal;
+    document.getElementById('fh-task-cancel').onclick = closeTaskModal;
+    const del = document.getElementById('fh-task-delete');
+    if(del) del.onclick = ()=>{ tasks = tasks.filter(x=>x.id!==editingTaskId); saveTasks(); closeTaskModal(); toast('Task removed'); };
+    document.getElementById('fh-task-save').onclick = ()=>{
+      const title = document.getElementById('t-title').value.trim();
+      const dueDate = document.getElementById('t-due').value;
+      if(!title || !dueDate){ toast('Title and due date are required'); return; }
+      const record = {
+        id: editing ? editingTaskId : uid(),
+        title,
+        type: document.getElementById('t-type').value,
+        dueDate,
+        animalId: document.getElementById('t-animal').value || null,
+        notes: document.getElementById('t-notes').value.trim(),
+        status: editing ? t.status : 'pending',
+        createdAt: editing ? t.createdAt : Date.now()
+      };
+      tasks = editing ? tasks.map(x=>x.id===editingTaskId?record:x) : [...tasks, record];
+      saveTasks();
+      toast(editing?'Task updated':'Task scheduled');
+      closeTaskModal();
+    };
+  }
+  function closeTaskModal(){ taskModalOpen=false; editingTaskId=null; render(); }
+
+  // -------- Inventory --------
+  const INV_CATEGORIES = ['Feed','Medicine','Supplies','Other'];
+
+  function inventoryHtml(){
+    if(!inventory.length){
+      return `<div class="fh-empty">
+        <h3>No inventory items yet</h3>
+        <p>Track feed bags, vaccines, and supplies so you know what's running low.</p>
+        <button class="fh-btn fh-btn-primary" onclick="document.getElementById('fh-add-open').click()">+ Add your first item</button>
+      </div>`;
+    }
+    const sorted = inventory.slice().sort((a,b)=> (b.createdAt||0)-(a.createdAt||0));
+    return `<div class="fh-grid">${sorted.map(invCardHtml).join('')}</div>`;
+  }
+
+  function invCardHtml(i){
+    const low = Number(i.quantity) <= Number(i.lowStockThreshold||0);
+    return `
+      <div class="fh-inv-card">
+        <div class="fh-inv-top">
+          <div>
+            <div class="fh-inv-name">${esc(i.name)}</div>
+            <div class="fh-inv-cat">${esc(i.category)}</div>
+          </div>
+        </div>
+        <div class="fh-inv-qty-row">
+          <div><span class="fh-inv-qty">${esc(i.quantity)}</span> <span class="fh-inv-unit">${esc(i.unit)}</span></div>
+          <div class="fh-inv-stepper">
+            <button data-invstep="${i.id}" data-delta="-1">−</button>
+            <button data-invstep="${i.id}" data-delta="1">+</button>
+          </div>
+        </div>
+        ${low ? `<div class="fh-inv-low">⚠ Low stock — reorder soon</div>` : ''}
+        <div class="fh-inv-actions">
+          <button data-editinv="${i.id}">Edit</button>
+          <button data-delinv="${i.id}">Remove</button>
+        </div>
+      </div>
+    `;
+  }
+
+  function bindInventoryView(){
+    document.querySelectorAll('[data-invstep]').forEach(btn=>{
+      btn.onclick = ()=>{
+        const id = btn.dataset.invstep, delta = Number(btn.dataset.delta);
+        inventory = inventory.map(i=> i.id===id ? {...i, quantity: Math.max(0, Number(i.quantity)+delta)} : i);
+        saveInventory(); render();
+      };
+    });
+    document.querySelectorAll('[data-editinv]').forEach(btn=>{
+      btn.onclick = ()=>{ editingInvId = btn.dataset.editinv; invModalOpen = true; render(); };
+    });
+    document.querySelectorAll('[data-delinv]').forEach(btn=>{
+      btn.onclick = ()=>{
+        inventory = inventory.filter(i=>i.id!==btn.dataset.delinv);
+        saveInventory(); toast('Item removed'); render();
+      };
+    });
+  }
+
+  function renderInvModal(){
+    let host = document.getElementById('fh-inv-modal-host');
+    if(host) host.remove();
+    if(!invModalOpen) return;
+    host = document.createElement('div');
+    host.id = 'fh-inv-modal-host';
+    document.getElementById('fh-root').appendChild(host);
+    const editing = !!editingInvId;
+    const i = editing ? inventory.find(x=>x.id===editingInvId) : {category:'Feed', unit:'kg', quantity:0, lowStockThreshold:0};
+    host.innerHTML = `
+      <div class="fh-overlay" id="fh-inv-overlay">
+        <div class="fh-modal">
+          <div class="fh-modal-header">
+            <h2>${editing?'Edit item':'Add inventory item'}</h2>
+            <button class="fh-modal-close" id="fh-inv-close">✕</button>
+          </div>
+          <div class="fh-modal-body">
+            <div class="fh-field"><label>Item name</label><input id="i-name" type="text" placeholder="e.g. Dairy meal" value="${esc(i.name||'')}"></div>
+            <div class="fh-row2">
+              <div class="fh-field"><label>Category</label>
+                <select id="i-cat">${INV_CATEGORIES.map(c=>`<option ${i.category===c?'selected':''}>${c}</option>`).join('')}</select>
+              </div>
+              <div class="fh-field"><label>Unit</label><input id="i-unit" type="text" placeholder="kg, bags, litres, doses" value="${esc(i.unit||'')}"></div>
+            </div>
+            <div class="fh-row2">
+              <div class="fh-field"><label>Quantity in stock</label><input id="i-qty" type="number" min="0" step="0.1" value="${esc(i.quantity!=null?i.quantity:0)}"></div>
+              <div class="fh-field"><label>Low stock alert below</label><input id="i-low" type="number" min="0" step="0.1" value="${esc(i.lowStockThreshold!=null?i.lowStockThreshold:0)}"></div>
+            </div>
+            <div class="fh-field"><label>Notes</label><textarea id="i-notes" rows="2" placeholder="Supplier, price, storage notes">${esc(i.notes||'')}</textarea></div>
+          </div>
+          <div class="fh-modal-footer">
+            ${editing ? '<button class="fh-btn fh-btn-danger" id="fh-inv-delete" style="margin-right:auto">Delete</button>' : ''}
+            <button class="fh-btn fh-btn-ghost" id="fh-inv-cancel">Cancel</button>
+            <button class="fh-btn fh-btn-primary" id="fh-inv-save">${editing?'Save changes':'Add item'}</button>
+          </div>
+        </div>
+      </div>
+    `;
+    const overlay = document.getElementById('fh-inv-overlay');
+    overlay.onclick = (e)=>{ if(e.target===overlay) closeInvModal(); };
+    document.getElementById('fh-inv-close').onclick = closeInvModal;
+    document.getElementById('fh-inv-cancel').onclick = closeInvModal;
+    const del = document.getElementById('fh-inv-delete');
+    if(del) del.onclick = ()=>{ inventory = inventory.filter(x=>x.id!==editingInvId); saveInventory(); closeInvModal(); toast('Item removed'); };
+    document.getElementById('fh-inv-save').onclick = ()=>{
+      const name = document.getElementById('i-name').value.trim();
+      const unit = document.getElementById('i-unit').value.trim();
+      if(!name || !unit){ toast('Item name and unit are required'); return; }
+      const record = {
+        id: editing ? editingInvId : uid(),
+        name,
+        category: document.getElementById('i-cat').value,
+        unit,
+        quantity: Number(document.getElementById('i-qty').value)||0,
+        lowStockThreshold: Number(document.getElementById('i-low').value)||0,
+        notes: document.getElementById('i-notes').value.trim(),
+        createdAt: editing ? i.createdAt : Date.now()
+      };
+      inventory = editing ? inventory.map(x=>x.id===editingInvId?record:x) : [...inventory, record];
+      saveInventory();
+      toast(editing?'Item updated':'Item added');
+      closeInvModal();
+    };
+  }
+  function closeInvModal(){ invModalOpen=false; editingInvId=null; render(); }
+
+  // -------- Reports --------
+  function reportsHtml(){
+    if(!animals.length){
+      return `<div class="fh-empty">
+        <h3>Nothing to report yet</h3>
+        <p>Add a few animals and log some activity, and your farm's reports will show up here.</p>
+        <button class="fh-btn fh-btn-primary" onclick="document.getElementById('fh-add-open').click()">+ Add an animal</button>
+      </div>`;
+    }
+    const speciesCounts = {};
+    animals.forEach(a=>{ speciesCounts[a.species] = (speciesCounts[a.species]||0)+1; });
+
+    const statusCounts = {active:0, sold:0, deceased:0};
+    animals.forEach(a=>{ statusCounts[a.status||'active'] = (statusCounts[a.status||'active']||0)+1; });
+    const statusColors = {active:'var(--pine)', sold:'#B28ED6', deceased:'var(--danger)'};
+    const maxStatus = Math.max(1, ...Object.values(statusCounts));
+
+    const typeCounts = {};
+    animals.forEach(a=> (a.healthLog||[]).forEach(l=>{ typeCounts[l.type] = (typeCounts[l.type]||0)+1; }));
+    const maxType = Math.max(1, ...Object.values(typeCounts));
+
+    const lowStockItems = inventory.filter(i=> Number(i.quantity) <= Number(i.lowStockThreshold||0));
+    const todayStr = new Date().toISOString().slice(0,10);
+    const overdueTasks = tasks.filter(t=>t.status!=='done' && t.dueDate<todayStr);
+
+    return `
+      <div class="fh-report-grid">
+        <div class="fh-report-card">
+          <h4>Herd &amp; flock composition</h4>
+          ${donutHtml(speciesCounts, animals.length)}
+        </div>
+        <div class="fh-report-card">
+          <h4>Status breakdown</h4>
+          <div class="fh-barlist">
+            ${Object.entries(statusCounts).map(([k,v])=>`
+              <div class="fh-barlist-row">
+                <div class="fh-barlist-label"><span style="text-transform:capitalize">${esc(k)}</span><span>${v}</span></div>
+                <div class="fh-barlist-track"><div class="fh-barlist-fill" style="width:${(v/maxStatus*100)}%; background:${statusColors[k]}"></div></div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+        <div class="fh-report-card">
+          <h4>Health log activity by type</h4>
+          ${Object.keys(typeCounts).length ? `<div class="fh-barlist">
+            ${Object.entries(typeCounts).map(([k,v])=>`
+              <div class="fh-barlist-row">
+                <div class="fh-barlist-label"><span>${esc(k)}</span><span>${v}</span></div>
+                <div class="fh-barlist-track"><div class="fh-barlist-fill" style="width:${(v/maxType*100)}%; background:var(--rust)"></div></div>
+              </div>
+            `).join('')}
+          </div>` : `<p style="font-size:12.5px; color:var(--ink-soft); margin:0;">No health log entries yet — add checkups, vaccinations, or treatments from an animal's record.</p>`}
+        </div>
+        <div class="fh-report-card">
+          <h4>Farm alerts</h4>
+          ${(lowStockItems.length || overdueTasks.length) ? `<div class="fh-barlist">
+            ${overdueTasks.length ? `<div class="fh-task-preview-row"><span style="width:7px;height:7px;border-radius:50%;flex-shrink:0;background:var(--danger)"></span><span style="flex:1">${overdueTasks.length} overdue task${overdueTasks.length>1?'s':''}</span></div>` : ''}
+            ${lowStockItems.map(i=>`<div class="fh-task-preview-row"><span style="width:7px;height:7px;border-radius:50%;flex-shrink:0;background:var(--danger)"></span><span style="flex:1">${esc(i.name)} running low</span><span class="fh-task-due" style="color:var(--danger)">${esc(i.quantity)} ${esc(i.unit)}</span></div>`).join('')}
+          </div>` : `<p style="font-size:12.5px; color:var(--ink-soft); margin:0;">Nothing needs your attention right now — no overdue tasks or low stock items.</p>`}
+        </div>
+      </div>
+    `;
+  }
+
+  // -------- Settings --------
+  function settingsHtml(){
+    return `
+      <div class="fh-settings-grid">
+        <div class="fh-settings-card">
+          <h4>Farm profile</h4>
+          <p class="fh-settings-sub">This name shows across the app and to anyone you share this browser with.</p>
+          ${settingsMsg ? `<div class="fh-auth-error" style="background:var(--pine-tint); color:var(--pine);">${esc(settingsMsg)}</div>` : ''}
+          <div class="fh-field"><label>Farm name</label><input id="s-farm" type="text" value="${esc(account.farmName||'')}"></div>
+          <div class="fh-field"><label>Your name</label><input id="s-owner" type="text" value="${esc(account.ownerName||'')}"></div>
+          <div class="fh-field"><label>Email</label><input id="s-email" type="email" value="${esc(account.email||'')}" disabled style="opacity:0.6"></div>
+          <button class="fh-btn fh-btn-primary" id="s-save" style="width:100%; padding:11px; margin-top:4px;">Save changes</button>
+        </div>
+
+        <div class="fh-settings-card">
+          <h4>Farm summary</h4>
+          <p class="fh-settings-sub">A quick snapshot of everything stored in MkulimaKe.</p>
+          <div class="fh-danger-row"><div><b>Animal records</b><span>Livestock &amp; poultry</span></div><div style="font-family:var(--font-mono); font-weight:700;">${animals.length}</div></div>
+          <div class="fh-danger-row"><div><b>Scheduled tasks</b><span>Pending &amp; completed</span></div><div style="font-family:var(--font-mono); font-weight:700;">${tasks.length}</div></div>
+          <div class="fh-danger-row"><div><b>Inventory items</b><span>Feed, medicine &amp; supplies</span></div><div style="font-family:var(--font-mono); font-weight:700;">${inventory.length}</div></div>
+          <div class="fh-danger-row"><div><b>Account created</b><span>Farm set up on MkulimaKe</span></div><div style="font-size:12px; color:var(--ink-soft);">${account.createdAt ? new Date(account.createdAt).toLocaleDateString() : '—'}</div></div>
+        </div>
+
+        <div class="fh-settings-card danger" style="grid-column:1/-1;">
+          <h4>Danger zone</h4>
+          <p class="fh-settings-sub">These actions can't be undone.</p>
+          <div class="fh-danger-row">
+            <div><b>Reset all records</b><span>Deletes all animals, tasks, and inventory — keeps your account</span></div>
+            <button class="fh-btn fh-btn-ghost" id="s-reset">Reset records</button>
+          </div>
+          <div class="fh-danger-row">
+            <div><b>Delete account</b><span>Removes your farm account and every record with it</span></div>
+            <button class="fh-btn fh-btn-danger" id="s-delete">Delete account</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function bindSettingsView(){
+    const save = document.getElementById('s-save');
+    if(save){
+      save.onclick = async ()=>{
+        const farmName = document.getElementById('s-farm').value.trim();
+        const ownerName = document.getElementById('s-owner').value.trim();
+        if(!farmName){ toast('Farm name is required'); return; }
+        account = {...account, farmName, ownerName};
+        await saveAccount();
+        settingsMsg = 'Saved.';
+        toast('Farm profile updated');
+        render();
+      };
+    }
+    const reset = document.getElementById('s-reset');
+    if(reset){
+      reset.onclick = ()=>{
+        if(confirm('This will permanently delete all animals, tasks, and inventory for this farm. Continue?')){
+          animals = []; tasks = []; inventory = [];
+          saveData(); saveTasks(); saveInventory();
+          toast('All records cleared');
+          view = 'dashboard';
+          render();
+        }
+      };
+    }
+    const del = document.getElementById('s-delete');
+    if(del){
+      del.onclick = ()=>{
+        if(confirm('This will permanently delete your MkulimaKe account and all farm records from this browser. Continue?')){
+          animals = []; tasks = []; inventory = []; account = null; loggedIn = false; authView='signup';
+          saveData(); saveTasks(); saveInventory();
+          window.storage.delete(ACCOUNT_KEY, false).catch(()=>{});
+          toast('Account deleted');
+          view = 'dashboard';
+          render();
+        }
+      };
+    }
   }
 
   // -------- Modals: add/edit + detail --------
@@ -1188,8 +1847,10 @@
               <select id="log-type">
                 <option value="Checkup">Checkup</option>
                 <option value="Vaccination">Vaccination</option>
+                <option value="Deworming">Deworming</option>
                 <option value="Treatment">Treatment</option>
                 <option value="Weight check">Weight check</option>
+                <option value="Breeding">Breeding</option>
               </select>
               <input id="log-date" type="date" value="${new Date().toISOString().slice(0,10)}">
               <input id="log-note" type="text" placeholder="Note (e.g. dewormed, 2ml Ivomec)">
@@ -1205,8 +1866,8 @@
   }
 
   function logItemHtml(l){
-    const iconMap = {'Checkup':'✓','Vaccination':'✚','Treatment':'⚕','Weight check':'⚖'};
-    const classMap = {'Checkup':'type-checkup','Vaccination':'','Treatment':'type-treatment','Weight check':'type-weight'};
+    const iconMap = {'Checkup':'✓','Vaccination':'✚','Deworming':'✚','Treatment':'⚕','Weight check':'⚖','Breeding':'♥'};
+    const classMap = {'Checkup':'type-checkup','Vaccination':'','Deworming':'','Treatment':'type-treatment','Weight check':'type-weight','Breeding':'type-breeding'};
     return `
       <div class="fh-timeline-item">
         <div class="fh-timeline-dot ${classMap[l.type]||''}">${iconMap[l.type]||'•'}</div>
